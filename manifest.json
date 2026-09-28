@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "id": "dbarke.sysmon",
+  "name": "System",
+  "version": "1.0.0",
+  "author": "dbarke",
+  "license": "MIT",
+  "description": "CPU and memory on the bar, with per-core load, pressure stalls, temperature and the processes actually responsible in the panel.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "System",
+    "description": "Live CPU and memory readings on the bar; per-core bars, swap, stall pressure, package temperature and the top processes in the panel.",
+    "category": "System",
+    "aliases": ["sysmon", "cpu", "memory", "ram", "system", "load", "resources"],
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 2,
+      "display": "both",
+      "showGraph": true,
+      "cpuWarnPercent": 85,
+      "memWarnPercent": 85,
+      "showPerCore": true,
+      "procRows": 5,
+      "sortBy": "cpu",
+      "monitorCommand": "omarchy-launch-or-focus-tui btop"
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 1,
+        "max": 60,
+        "step": 1,
+        "defaultValue": 2,
+        "description": "How often the bar reading is resampled. A CPU percentage is a difference between two samples, so this is also the window it averages over -- longer is calmer, shorter catches short spikes. The panel always samples every second while it is open."
+      },
+      {
+        "key": "display",
+        "type": "enum",
+        "label": "Bar reading",
+        "options": ["both", "cpu", "memory"],
+        "defaultValue": "both",
+        "description": "Which figures sit on the bar. The panel shows everything regardless."
+      },
+      {
+        "key": "showGraph",
+        "type": "boolean",
+        "label": "Show CPU sparkline",
+        "defaultValue": true,
+        "description": "A short history strip next to the number, so a spike that already passed is still visible."
+      },
+      {
+        "key": "cpuWarnPercent",
+        "type": "integer",
+        "label": "CPU warning threshold (%)",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "defaultValue": 85,
+        "description": "Sustained load at or above this turns the reading urgent. 0 disables."
+      },
+      {
+        "key": "memWarnPercent",
+        "type": "integer",
+        "label": "Memory warning threshold (%)",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "defaultValue": 85,
+        "description": "Measured against memory that is genuinely unavailable, not against page cache. 0 disables."
+      },
+      {
+        "key": "showPerCore",
+        "type": "boolean",
+        "label": "Show per-core bars",
+        "defaultValue": true,
+        "description": "One bar per logical CPU. This is what tells a single pegged thread apart from a machine that is actually busy."
+      },
+      {
+        "key": "procRows",
+        "type": "integer",
+        "label": "Processes to list",
+        "min": 0,
+        "max": 15,
+        "step": 1,
+        "defaultValue": 5,
+        "description": "Length of the top-processes table. 0 hides it, and also stops the panel walking /proc for it."
+      },
+      {
+        "key": "sortBy",
+        "type": "enum",
+        "label": "Sort processes by",
+        "options": ["cpu", "memory"],
+        "defaultValue": "cpu",
+        "description": "Starting sort for the process table. c and m switch it while the panel is open."
+      },
+      {
+        "key": "monitorCommand",
+        "type": "string",
+        "label": "Full monitor command",
+        "defaultValue": "omarchy-launch-or-focus-tui btop",
+        "description": "Launched by b, and by a middle-click on the bar, when the panel is not enough."
+      }
+    ]
+  }
+}
